@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+vermon.core
+-----------
+
+This module contains the core implementation of vermon package.
+"""
+
 __all__ = [
     'print_warning',
     'Vermon'
@@ -54,7 +61,16 @@ class Vermon(object):
 
     @staticmethod
     def version_to_tuple(version: str, separator='.') -> tuple:
-        """Convert version to tuple. Ex: '1.4.3' to (1, 4, 3)."""
+        """Convert version to tuple. 
+        
+        Example
+        -------
+        '1.4.3' version to tuple:
+        
+            >>> from vermon import Vermon
+            >>> Vermon.version_to_tuple('1.4.3')
+            (1, 4, 3).
+        """
 
         major, minor, patch = map(int, version.split(separator))
 
@@ -66,7 +82,8 @@ class Vermon(object):
         return PYPI.format(package=self.package)
 
     def get_latest_version(self):
-        
+        """Get latest version in pypi platform."""
+
         endpoint = self.build_endpoint()
         response = requests.get(
             endpoint,
