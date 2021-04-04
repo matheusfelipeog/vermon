@@ -1,76 +1,96 @@
 # -*- coding: utf-8 -*-
 
+__all__ = [
+    'print_warning',
+    'Vermon'
+]
+
+from vermon.__about__ import __version__
+from vermon.__about__ import __author__
+from vermon.__about__ import __email__
+from vermon.__about__ import __author_github__
+from vermon.__about__ import __project_github__
+
 import requests
+
+
+PYPI = 'https://pypi.org/pypi/{package}/json'
+
+
+def print_warning(package: str, current_version: str, latest_version: str):
+    """Print a warning if of package has a newer version."""
+
+    warning_message = (
+        'You are using an old version of the {package} package (v{current_version}), '
+        'a new version has been released (v{latest_version}).\n'
+        'Please run: python -m pip install {package} --upgrade'
+    ).format(
+        package=package,
+        current_version=current_version,
+        latest_version=latest_version
+    )
+
+    print(warning_message)
 
 
 class Vermon(object):
     """Check if package has a newer version."""
 
-    def __init__(self, current_version: str, package_name: str):
-        
+    def __init__(self, package: str, current_version: str):
+        self.package = package
         self.current_version = current_version
-        self.package_name = package_name
-        self.latest_version = None
-    
-    def endpoint(self):
-        """Build endpoint of Pypi API."""
-
-        pypi = 'https://pypi.org'
-        route = '/pypi/{package}/json'.format(package=self.package_name)
-
-        return pypi + route
+        self.latest_version = self.get_latest_version()
 
     @staticmethod
-    def version_to_tuple(version: str, separator='.'):
+    def version_to_tuple(version: str, separator='.') -> tuple:
         """Convert version to tuple. Ex: '1.4.3' to (1, 4, 3)."""
 
-        return tuple(map(int, version.split(separator)))
+        major, minor, patch = map(int, version.split(separator))
+
+        return (major, minor, patch)
+
+    def build_endpoint(self):
+        """Build endpoint of pypi API with package name."""
+
+        return PYPI.format(package=self.package)
 
     def get_latest_version(self):
-        try:
-            url = self.endpoint()
-
-            r = requests.get(url)
-            
-            if r.status_code == 200:
-                self.latest_version = r.json()['info']['version']
-
-                return self.version_to_tuple(self.latest_version)
-
-        except Exception:
-            pass
+        
+        endpoint = self.build_endpoint()
+        response = requests.get(
+            endpoint,
+            headers={
+                'User-Agent': f'Vermon v{__version__} <https://github.com/matheusfelipeog/vermon>',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        )
+        
+        if response.ok:
+            return response.json()['info']['version']
 
     def is_newer_version_available(self):
         """Check if latest version is greater than the current version."""
 
         current_version = self.version_to_tuple(self.current_version)
-        latest_version = self.get_latest_version()
+        latest_version = self.version_to_tuple(self.latest_version)
 
         if latest_version > current_version:
-            return True
+            return True, self.latest_version
         
-        return False
-
-    def print_status(self):
-        """Print a warning if of package has a newer version."""
-
-        warning = (
-            'You are using an old version of the {package} package (v{current_version}), '
-            'a new version has been released (v{latest_version}).\n'
-            'Please run: python -m pip install {package} --upgrade'
-        ).format(
-            package=self.package_name,
-            current_version=self.current_version,
-            latest_version=self.latest_version
-        )
-
-        print(warning)
+        return False, None
 
     @staticmethod
-    def run(current_version: str, package_name: str):
-        """Run CheckVersion without instantiating an object."""
+    def run(package: str, current_version: str):
+        """Run vermon without instantiating an object."""
 
-        check = Vermon(current_version, package_name)
+        vermon = Vermon(package, current_version)
+        
+        is_newer_version, version = vermon.is_newer_version_available()
 
-        if check.is_newer_version_available():
-            check.print_status()
+        if is_newer_version:
+            print_warning(
+                package=package,
+                current_version=current_version,
+                latest_version=version
+            )
