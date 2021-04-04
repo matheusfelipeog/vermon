@@ -41,6 +41,17 @@ class Vermon(object):
         self.current_version = current_version
         self.latest_version = self.get_latest_version()
 
+    def __repr__(self):
+        return (
+            'Vermon('
+            f'package=<{self.package}>, '
+            f'current_version=<{self.current_version}>, '
+            f'latest_version=<{self.latest_version}>)'
+        )
+    
+    def __str__(self):
+        return f'Vermon(package={self.package}, current_version={self.current_version})'
+
     @staticmethod
     def version_to_tuple(version: str, separator='.') -> tuple:
         """Convert version to tuple. Ex: '1.4.3' to (1, 4, 3)."""
