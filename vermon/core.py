@@ -18,10 +18,29 @@ from vermon.__about__ import __email__
 from vermon.__about__ import __author_github__
 from vermon.__about__ import __project_github__
 
+import sys
+import os
+
 import requests
 
 
 PYPI = 'https://pypi.org/pypi/{package}/json'
+
+
+def _callable_python() -> str:
+    """Returns the string that is used to run Python in the terminal.
+    
+    This is necessary for the warning to indicate the correct python executor,
+    regardless of the python version, of OS and virtual environment where 
+    the vermon module is being used.
+    """
+
+    python = os.path.basename(sys.executable)
+
+    if python.endswith('.exe'):
+        python = python.rstrip('.exe')
+    
+    return python
 
 
 def print_warning(package: str, current_version: str, latest_version: str):
@@ -30,11 +49,12 @@ def print_warning(package: str, current_version: str, latest_version: str):
     warning_message = (
         'You are using an old version of the {package} package (v{current_version}), '
         'a new version has been released (v{latest_version}).\n'
-        'Please run: python -m pip install {package} --upgrade'
+        'Please run: {python} -m pip install {package} --upgrade'
     ).format(
         package=package,
         current_version=current_version,
-        latest_version=latest_version
+        latest_version=latest_version,
+        python=_callable_python()
     )
 
     print(warning_message)
