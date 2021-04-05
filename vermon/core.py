@@ -96,12 +96,12 @@ class Vermon(object):
 
         return (major, minor, patch)
 
-    def build_endpoint(self):
+    def build_endpoint(self) -> str:
         """Build endpoint of pypi API with package name."""
 
         return PYPI.format(package=self.package)
 
-    def get_latest_version(self):
+    def get_latest_version(self) -> str:
         """Get latest version in pypi platform."""
 
         endpoint = self.build_endpoint()
@@ -117,7 +117,7 @@ class Vermon(object):
         if response.ok:
             return response.json()['info']['version']
 
-    def is_newer_version_available(self):
+    def is_newer_version_available(self) -> tuple:
         """Check if latest version is greater than the current version."""
 
         current_version = self.version_to_tuple(self.current_version)
