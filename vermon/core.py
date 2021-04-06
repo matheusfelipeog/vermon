@@ -8,7 +8,6 @@ This module contains the core implementation of vermon package.
 """
 
 __all__ = [
-    'print_warning',
     'Vermon'
 ]
 
@@ -48,7 +47,7 @@ def _callable_python() -> str:
     return python
 
 
-def print_warning(package: str, current_version: str, latest_version: str):
+def _print_warning(package: str, current_version: str, latest_version: str):
     """Print a warning if of package has a newer version."""
 
     warning_message = (
@@ -162,7 +161,7 @@ class Vermon(object):
         is_newer_version = vermon.is_newer_version_available()
 
         if is_newer_version:
-            print_warning(
+            _print_warning(
                 package=vermon.package,
                 current_version=vermon.current_version,
                 latest_version=vermon.latest_version
