@@ -38,3 +38,11 @@ class TestVermon(unittest.TestCase):
         for version in versions:
             v = Vermon.get_only_version(version)
             self.assertIn(v, version)
+
+    def test_if_version_to_tuple_method_has_correct_return(self):
+        version = '1.2.3'
+        version_tuple = Vermon.version_to_tuple(version)
+        self.assertIsInstance(version_tuple, tuple)
+        self.assertEqual(len(version_tuple), 3)
+        for v in version_tuple:
+            self.assertIsInstance(v, int)
