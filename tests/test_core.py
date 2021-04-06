@@ -32,3 +32,9 @@ class TestVermon(unittest.TestCase):
         for v in unsupported_version_patterns:
             with self.assertRaises(UnsupportedVersionPattern, msg=f'This version pattern passed: {v}'):
                 Vermon.is_supported_version_pattern(v)
+
+    def test_get_only_version_method(self):
+        versions = ['1.0.0', 'v1.2.3', 'version 3.5.5']
+        for version in versions:
+            v = Vermon.get_only_version(version)
+            self.assertIn(v, version)
