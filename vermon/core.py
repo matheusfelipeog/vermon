@@ -20,11 +20,16 @@ from vermon.__about__ import __project_github__
 
 import sys
 import os
+import re
 
 import requests
 
+from vermon.exceptions import UnsupportedVersionPattern
+
 
 PYPI = 'https://pypi.org/pypi/{package}/json'
+
+VERSION_PATTERN = re.compile(r'[0-9]+\.[0-9]+\.[0-9]+')
 
 
 def _callable_python() -> str:
@@ -65,8 +70,8 @@ class Vermon(object):
 
     def __init__(self, package: str, current_version: str):
         self.package = package
-        self.current_version = current_version
-        self.latest_version = self.get_latest_version()
+        self.current_version = self.get_only_version(current_version)
+        self.latest_version = self.get_only_version(self.get_latest_version())
 
     def __repr__(self):
         return (
@@ -78,6 +83,26 @@ class Vermon(object):
     
     def __str__(self):
         return f'Vermon(package={self.package}, current_version={self.current_version})'
+
+    @staticmethod
+    def is_supported_version_pattern(version: str) -> tuple:
+        """Check if the version pattern is in a supported format."""
+
+        match = VERSION_PATTERN.search(version)
+
+        if not match:
+            raise UnsupportedVersionPattern(f'This version pattern ({version}) is not supported.')
+        
+        return True, match.group()
+
+    @staticmethod
+    def get_only_version(version: str) -> str:
+        """Get only version if it exists."""
+
+        is_supported, version = Vermon.is_supported_version_pattern(version)
+
+        if is_supported:
+            return str(version)
 
     @staticmethod
     def version_to_tuple(version: str, separator='.') -> tuple:
@@ -117,16 +142,16 @@ class Vermon(object):
         if response.ok:
             return response.json()['info']['version']
 
-    def is_newer_version_available(self) -> tuple:
+    def is_newer_version_available(self) -> bool:
         """Check if latest version is greater than the current version."""
 
         current_version = self.version_to_tuple(self.current_version)
         latest_version = self.version_to_tuple(self.latest_version)
 
         if latest_version > current_version:
-            return True, self.latest_version
+            return True
         
-        return False, None
+        return False
 
     @staticmethod
     def run(package: str, current_version: str):
@@ -134,11 +159,11 @@ class Vermon(object):
 
         vermon = Vermon(package, current_version)
         
-        is_newer_version, version = vermon.is_newer_version_available()
+        is_newer_version = vermon.is_newer_version_available()
 
         if is_newer_version:
             print_warning(
-                package=package,
-                current_version=current_version,
-                latest_version=version
+                package=vermon.package,
+                current_version=vermon.current_version,
+                latest_version=vermon.latest_version
             )
