@@ -6,7 +6,6 @@ import unittest
 import re
 
 from vermon.core import _callable_python
-from vermon.core import _print_warning
 from vermon.core import Vermon
 
 from vermon.exceptions import UnsupportedVersionPattern
