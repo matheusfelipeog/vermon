@@ -113,7 +113,7 @@ class Vermon(object):
         
             >>> from vermon import Vermon
             >>> Vermon.version_to_tuple('1.4.3')
-            (1, 4, 3).
+            (1, 4, 3)
         """
 
         major, minor, patch = map(int, version.split(separator))
