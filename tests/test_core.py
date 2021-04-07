@@ -46,3 +46,8 @@ class TestVermon(unittest.TestCase):
         self.assertEqual(len(version_tuple), 3)
         for v in version_tuple:
             self.assertIsInstance(v, int)
+
+    def test_if_built_the_correct_endpoint(self):
+        package = 'sample'
+        endpoint = Vermon.build_endpoint(package)
+        self.assertEqual(endpoint, f'https://pypi.org/pypi/{package}/json')
