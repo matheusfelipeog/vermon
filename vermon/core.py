@@ -120,15 +120,16 @@ class Vermon(object):
 
         return (major, minor, patch)
 
-    def build_endpoint(self) -> str:
+    @staticmethod
+    def build_endpoint(package: str) -> str:
         """Build endpoint of pypi API with package name."""
 
-        return PYPI.format(package=self.package)
+        return PYPI.format(package=package)
 
     def get_latest_version(self) -> str:
         """Get latest version in pypi platform."""
 
-        endpoint = self.build_endpoint()
+        endpoint = self.build_endpoint(self.package)
         response = requests.get(
             endpoint,
             headers={
