@@ -24,6 +24,7 @@ import re
 import requests
 
 from vermon.exceptions import UnsupportedVersionPattern
+from vermon.exceptions import PackageNotFoundOnPypi
 
 
 PYPI = 'https://pypi.org/pypi/{package}/json'
@@ -141,6 +142,8 @@ class Vermon(object):
         
         if response.ok:
             return response.json()['info']['version']
+        else:
+            raise PackageNotFoundOnPypi(f'This package {self.package} was not found on Pypi.')
 
     def is_newer_version_available(self) -> bool:
         """Check if latest version is greater than the current version."""
