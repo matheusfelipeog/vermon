@@ -97,6 +97,19 @@ Done, now you can start the job ;)
 
 ## Use
 
+To use the vermon package, call `Vermon.run` method in your package's `__init__.py` file:
+
+```python
+from vermon import Vermon
+
+Vermon.run(
+    package='YOUR_PACKAGE',
+    current_version=your_package.__version__
+)
+```
+
+Done 🎉
+
 
 ## Contributions
 
