@@ -25,7 +25,7 @@
 - [Install](#install)
     - [with pipenv](#install-with-pipenv)
     - [with pip and virtualenv](#install-with-pip-and-virtualenv)
-- [Demo](#demo)
+- [Use](#use)
 - [Contributions](#contributions)
 - [License](#license)
 
@@ -96,7 +96,7 @@ $ pip install vermon
 Done, now you can start the job ;)
 
 
-## Demo
+## Use
 
 
 ## Contributions
