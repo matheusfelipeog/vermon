@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./.github/assets/images/vermon.png" alt="Logo Vermon" width="200px" />
+    <img src="./.github/assets/images/vermon.png" alt="Logo Vermon" width="450px" />
 </div>
 
 <p align="center">
