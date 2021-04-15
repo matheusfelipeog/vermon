@@ -1,6 +1,6 @@
-<div align="center">
+<p align="center">
     <img src="https://raw.githubusercontent.com/matheusfelipeog/vermon/master/.github/assets/images/vermon.png" alt="Logo Vermon" width="450px" />
-</div>
+</p>
 
 <p align="center">
     <a href="https://pypi.org/project/vermon/">
