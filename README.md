@@ -36,7 +36,7 @@
 ***For example:*** *suppose you created a package called `foo` and published version `1.0.0` in pypi. Some users are already using the foo package as a dependency on their projects. You found a bug and released a patch with the fix, now the latest version of `foo` is `1.0.1`. All users using version `1.0.0` (less than the last release) of the package will receive a warning on the terminal similar to this one whenever they run the project:*
 
 ```bash
-> python user_project.py
+> python your_project.py
 You are using an old version of the foo package (v1.0.0)
 a new version has been released (v1.0.1).
 Please run: python -m pip install foo --upgrade
