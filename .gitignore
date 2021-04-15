@@ -110,6 +110,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Secrets
+.pypirc
+
 # Vscode config
 .vscode/
 
